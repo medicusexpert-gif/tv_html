@@ -1,16 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wyjazdy</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      background: black;
+    }
+
+    iframe {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+    }
+
+    .loading {
+      color: white;
+      font-family: Arial, sans-serif;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="loading">Ładowanie dokumentu...</div>
 
 <script>
-  window.location.replace("https://medicuscompl-my.sharepoint.com/personal/mwitkowski_medicus_com_pl/_layouts/15/Doc.aspx?sourcedoc={27de3008-e94f-4309-9303-f218dc59e037}&action=embedview&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True");
+  const url = "https://medicuscompl-my.sharepoint.com/personal/mwitkowski_medicus_com_pl/_layouts/15/Doc.aspx?sourcedoc={27de3008-e94f-4309-9303-f218dc59e037}&action=embedview&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True";
+
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+  if (isIOS) {
+    // iPhone/iPad -> przekierowanie (bo iframe często nie działa)
+    window.location.replace(url);
+  } else {
+    // PC / TV / Android -> iframe (zostaje adres GitHub Pages)
+    const iframe = document.createElement("iframe");
+    iframe.src = url;
+    document.body.appendChild(iframe);
+  }
 </script>
 
-</head>
-<body style="margin:0; background:black; color:white; display:flex; justify-content:center; align-items:center; height:100vh;">
-  Ładowanie dokumentu...
 </body>
 </html>
