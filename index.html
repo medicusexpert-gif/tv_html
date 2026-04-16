@@ -37,7 +37,7 @@
 
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
                 (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-  const isBrave = navigator.brave && navigator.brave.isBrave;
+
   if (isIOS) {
     window.location.replace(url);
   } else {
@@ -51,12 +51,15 @@
     document.body.appendChild(iframe);
   }
 
-// odświeżanie co 900 sek
-setInterval(() => {
-  document.querySelector("iframe").src += "";
-}, 900000);
-
-
+  // odświeżanie co 900 sek (15 minut)
+  setInterval(() => {
+    if (isIOS) {
+      window.location.reload();
+    } else {
+      const iframe = document.querySelector("iframe");
+      if (iframe) iframe.src = url + "&t=" + Date.now();
+    }
+  }, 900000);
 </script>
 
 </body>
