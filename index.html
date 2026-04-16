@@ -50,6 +50,13 @@
 
     document.body.appendChild(iframe);
   }
+
+// odświeżanie co 1800 sek
+setInterval(() => {
+  document.querySelector("iframe").src += "";
+}, 1800000);
+
+
 </script>
 
 </body>
