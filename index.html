@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="pl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +8,7 @@
     body {
       margin: 0;
       background: black;
+      overflow: hidden;
     }
 
     iframe {
@@ -24,6 +25,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: 9999;
+      font-size: 28px;
     }
   </style>
 </head>
@@ -35,23 +37,37 @@
 <script>
   const url = "https://medicuscompl-my.sharepoint.com/personal/mwitkowski_medicus_com_pl/_layouts/15/Doc.aspx?sourcedoc={27de3008-e94f-4309-9303-f218dc59e037}&action=embedview&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True";
 
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+  const loadingDiv = document.getElementById("loading");
+
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
                 (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
-  if (isIOS) {
-    window.location.replace(url);
-  } else {
+  // timeout bezpieczeństwa: jeśli nie załaduje się w 60 sekund -> reload strony
+  const loadTimeout = setTimeout(() => {
+    location.reload();
+  }, 60000);
+
+  function loadIframe() {
     const iframe = document.createElement("iframe");
-    iframe.src = url;
+    iframe.src = url + "&t=" + Date.now();
+    iframe.loading = "eager";
+    iframe.allowFullscreen = true;
 
     iframe.onload = function () {
-      document.getElementById("loading").style.display = "none";
+      clearTimeout(loadTimeout);
+      loadingDiv.style.display = "none";
     };
 
     document.body.appendChild(iframe);
   }
 
-  // odświeżanie co 900 sek (15 minut)
+  if (isIOS) {
+    window.location.replace(url);
+  } else {
+    loadIframe();
+  }
+
+  // odświeżanie iframe co 15 minut
   setInterval(() => {
     if (isIOS) {
       window.location.reload();
@@ -60,6 +76,11 @@
       if (iframe) iframe.src = url + "&t=" + Date.now();
     }
   }, 900000);
+
+  // pełny reload strony co 2 godziny (bardzo pomaga na TV)
+  setInterval(() => {
+    window.location.reload();
+  }, 7200000);
 </script>
 
 </body>
